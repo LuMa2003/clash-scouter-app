@@ -8,7 +8,7 @@ import (
 )
 
 
-func cli(summoner string) {
+func Cli(summoner string) {
 	var source_url string = ""
 	prompt := promptui.Select{
 		Label:    "Select Source",
