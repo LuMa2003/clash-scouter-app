@@ -4,15 +4,14 @@ import (
 	"crypto/tls"
 	b64 "encoding/base64"
 	"fmt"
+	"github.com/LuMa2003/clash-scouter-app/internal"
+	"github.com/tidwall/gjson"
 	"io"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-	"github.com/LuMa2003/clash-scouter-app/internal"
-	"github.com/tidwall/gjson"
-
 )
 
 func check(e error) {
@@ -59,8 +58,8 @@ func main() {
 	check(err)
 
 	Summoners_array := gjson.GetManyBytes(resBody, "gameName", "tagLine")
-	cli.Cli(fmt.Sprint(Summoners_array[0].Value() ,"-" , Summoners_array[1].Value()))
-	
+	cli.Cli(fmt.Sprint(Summoners_array[0].Value(), "-", Summoners_array[1].Value()))
+
 	duration := time.Since(start)
 	fmt.Println(duration)
 }

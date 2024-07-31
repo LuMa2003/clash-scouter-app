@@ -7,7 +7,6 @@ import (
 	"github.com/toqueteos/webbrowser"
 )
 
-
 func Cli(summoner string) {
 	var source_url string = ""
 	prompt := promptui.Select{
@@ -27,13 +26,12 @@ func Cli(summoner string) {
 	switch result {
 
 	case "U.GG":
-		source_url = "https://u.gg/lol/profile/euw1/" + summoner +"/overview"
+		source_url = "https://u.gg/lol/profile/euw1/" + summoner + "/overview"
 	case "OP.GG":
-		source_url = "https://www.op.gg/summoners/euw/" + summoner 
+		source_url = "https://www.op.gg/summoners/euw/" + summoner
 	case "LEAGUEOFGRAPHS.COM":
 		source_url = "https://www.leagueofgraphs.com/summoner/euw/" + summoner
 	}
 	webbrowser.Open(source_url)
-	
-	
+
 }
