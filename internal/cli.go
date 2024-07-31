@@ -27,11 +27,11 @@ func Cli(summoner string) {
 	switch result {
 
 	case "U.GG":
-		source_url = "https://u.gg/lol/profile/euw1/" + summoner +"-euw/overview"
+		source_url = "https://u.gg/lol/profile/euw1/" + summoner +"/overview"
 	case "OP.GG":
-		source_url = "https://www.op.gg/summoners/euw/" + summoner + "-EUW"
+		source_url = "https://www.op.gg/summoners/euw/" + summoner 
 	case "LEAGUEOFGRAPHS.COM":
-		source_url = "https://www.leagueofgraphs.com/summoner/euw/" + summoner + "-EUW"	
+		source_url = "https://www.leagueofgraphs.com/summoner/euw/" + summoner
 	}
 	webbrowser.Open(source_url)
 	
