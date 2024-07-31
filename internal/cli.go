@@ -4,15 +4,17 @@ import (
 	"fmt"
 
 	"github.com/manifoldco/promptui"
-    "github.com/toqueteos/webbrowser"
+	"github.com/toqueteos/webbrowser"
 )
 
-func cli() {
+
+func cli(summoner string) {
+	var source_url string = ""
 	prompt := promptui.Select{
-		Label: "Select Source",
-        HideHelp: true,
-        Size: 10,
-		Items: []string{"U.GG", "OP.GG", "LEAGUEOFGRAPHS.COM"},
+		Label:    "Select Source",
+		HideHelp: true,
+		Size:     10,
+		Items:    []string{"U.GG", "OP.GG", "LEAGUEOFGRAPHS.COM"},
 	}
 
 	_, result, err := prompt.Run()
@@ -22,14 +24,16 @@ func cli() {
 		return
 	}
 
-    switch result{
+	switch result {
 
-    case"U.GG":
-        webbrowser.Open("https://u.gg")
-    case"OP.GG":
-        webbrowser.Open("https://op.gg")
-    case"LEAGUEOFGRAPHS.COM":
-        webbrowser.Open("https://LEAGUEOFGRAPHS.COM")
-    }
-
+	case "U.GG":
+		source_url = "https://u.gg/lol/profile/euw1/" + summoner +"-euw/overview"
+	case "OP.GG":
+		source_url = "https://www.op.gg/summoners/euw/" + summoner + "-EUW"
+	case "LEAGUEOFGRAPHS.COM":
+		source_url = "https://www.leagueofgraphs.com/summoner/euw/" + summoner + "-EUW"	
+	}
+	webbrowser.Open(source_url)
+	
+	
 }
