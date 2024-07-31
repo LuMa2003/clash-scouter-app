@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"github.com/LuMa2003/clash-scouter-app/internal"
 )
 
 func check(e error) {
