@@ -18,10 +18,10 @@ type ConnInfo struct {
 }
 
 type Request struct {
-	connInfo *ConnInfo
-	method   string
-	endpoint string
-	body     io.Reader
+	Conn *ConnInfo
+	Method   string
+	Endpoint string
+	Body     io.Reader
 }
 
 func GetAuth() (ConnInfo, error) {
@@ -45,12 +45,12 @@ func GetAuth() (ConnInfo, error) {
 }
 
 func LCU(request *Request) ([]byte, error) {
-	requestURL := fmt.Sprint("https://127.0.0.1:", request.connInfo.Port, request.endpoint)
-	req, err := http.NewRequest(request.method, requestURL, request.body)
+	requestURL := fmt.Sprint("https://127.0.0.1:", request.Conn.Port, request.Endpoint)
+	req, err := http.NewRequest(request.Method, requestURL, request.Body)
 	if err != nil {
 		panic(err)
 	}
-	req.Header.Add("Authorization", "Basic "+request.connInfo.Auth)
+	req.Header.Add("Authorization", "Basic "+request.Conn.Auth)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil || res.StatusCode != 200 {
 		return nil, errors.New("request failed")
