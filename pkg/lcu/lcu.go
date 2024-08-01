@@ -18,7 +18,7 @@ type ConnInfo struct {
 }
 
 type Request struct {
-	Conn *ConnInfo
+	Conn     *ConnInfo
 	Method   string
 	Endpoint string
 	Body     io.Reader
@@ -44,7 +44,7 @@ func GetAuth() (ConnInfo, error) {
 	return ConnInfo{Port: uint16(port), Auth: b64.StdEncoding.EncodeToString([]byte("riot:" + token))}, nil
 }
 
-func LCU(request *Request) ([]byte, error) {
+func LCU(request Request) ([]byte, error) {
 	requestURL := fmt.Sprint("https://127.0.0.1:", request.Conn.Port, request.Endpoint)
 	req, err := http.NewRequest(request.Method, requestURL, request.Body)
 	if err != nil {
