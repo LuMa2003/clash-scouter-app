@@ -79,5 +79,5 @@ func Cli(summoners *[]clash.Summoner, region string) {
 		source_url = fmt.Sprint("https://porofessor.gg/pregame/", strings.ToLower(region), "/", summoner_string.String())
 	}
 	webbrowser.Open(source_url)
-
+	
 }
