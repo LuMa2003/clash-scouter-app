@@ -3,14 +3,13 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/LuMa2003/clash-scouter-app/pkg/lcu"
-	"github.com/LuMa2003/clash-scouter-app/internal/cli"
 	"github.com/LuMa2003/clash-scouter-app/internal/clash"
+	"github.com/LuMa2003/clash-scouter-app/internal/cli"
+	"github.com/LuMa2003/clash-scouter-app/pkg/lcu"
+	"github.com/manifoldco/promptui"
 	"github.com/tidwall/gjson"
 	"net/http"
 	"time"
-	"github.com/manifoldco/promptui"
-
 )
 
 func check(e error) {
@@ -19,18 +18,15 @@ func check(e error) {
 	}
 }
 
-
 func main() {
 	start := time.Now()
 
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
-
 	for {
 		connInfo, err := lcu.GetAuth()
-	
+
 		if err == nil {
-			// If no error, print success and break out of the loop
 			data, err := lcu.LCU(lcu.Request{
 				Conn:     &connInfo,
 				Method:   "GET",
@@ -38,28 +34,23 @@ func main() {
 				Body:     nil,
 			})
 			check(err)
-		
 			region := gjson.GetBytes(data, "region").String()
-		
-		
+
 			summoner_array, err := clash.ClashOpponent(&connInfo)
-		
-			
+			fmt.Println(err)
 			cli.Cli(&summoner_array, region)
 			break
 		}
 
-		
-	if err != nil{
 		prompt := promptui.Select{
-			Label:    "Något gick fel",
+			Label:    err,
 			HideHelp: true,
 			Size:     10,
-			Items:    []string{"Retry","Exit"},
+			Items:    []string{"Retry", "Exit"},
 		}
 
 		_, result, err := prompt.Run()
-	
+
 		if err != nil {
 			fmt.Printf("Prompt failed %v\n", err)
 			return
@@ -67,11 +58,9 @@ func main() {
 		if result == "Exit" {
 			fmt.Println("Exiting...")
 			return
-		}	
-	
-	
+		}
+
 	}
-}
 	duration := time.Since(start)
 	fmt.Println(duration)
 }
