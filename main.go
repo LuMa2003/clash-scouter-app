@@ -4,6 +4,8 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/LuMa2003/clash-scouter-app/pkg/lcu"
+	"github.com/LuMa2003/clash-scouter-app/internal/cli"
+	"github.com/LuMa2003/clash-scouter-app/internal/clash"
 	"github.com/tidwall/gjson"
 	"net/http"
 	"time"
@@ -34,7 +36,11 @@ func main() {
 
 	region := gjson.GetBytes(data, "region").String()
 
-	fmt.Println(region)
+
+	summoner_array, err := clash.ClashOpponent(&connInfo)
+
+	
+	cli.Cli(&summoner_array, region)
 
 	duration := time.Since(start)
 	fmt.Println(duration)
