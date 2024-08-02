@@ -13,12 +13,6 @@ import (
 	"time"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
 	start := time.Now()
 
@@ -51,7 +45,9 @@ func main() {
 		Endpoint: "/riotclient/region-locale",
 		Body:     nil,
 	})
-	check(err)
+	if err != nil {
+		panic(err)
+	}
 	region := gjson.GetBytes(data, "region").String()
 
 	var summonerArray []clash.Summoner
