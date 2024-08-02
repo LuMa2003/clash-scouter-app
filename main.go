@@ -9,6 +9,7 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/tidwall/gjson"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -23,45 +24,52 @@ func main() {
 
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
+	prompt := promptui.Select{
+		Label:    "Something went wrong",
+		HideHelp: true,
+		Items:    []string{"Retry", "Exit"},
+	}
+
+	var connInfo lcu.ConnInfo
+	var err error
 	for {
-		connInfo, err := lcu.GetAuth()
-
-		if err == nil {
-			// If no error, print success and break out of the loop
-			data, err := lcu.LCU(lcu.Request{
-				Conn:     &connInfo,
-				Method:   "GET",
-				Endpoint: "/riotclient/region-locale",
-				Body:     nil,
-			})
-			check(err)
-			region := gjson.GetBytes(data, "region").String()
-
-			summoner_array, err := clash.ClashOpponent(&connInfo)
-			check(err)
-			cli.Cli(&summoner_array, region)
+		connInfo, err = lcu.GetAuth()
+		if err != nil {
+			prompt.Label = "League of Legends is not running"
+			choice, _, _ := prompt.Run()
+			if choice == 1 {
+				os.Exit(0)
+			}
+		} else {
 			break
 		}
-
-		prompt := promptui.Select{
-			Label:    err,
-			HideHelp: true,
-			Size:     10,
-			Items:    []string{"Retry", "Exit"},
-		}
-
-		_, result, err := prompt.Run()
-
-		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			return
-		}
-		if result == "Exit" {
-			fmt.Println("Exiting...")
-			return
-		}
-
 	}
+
+	data, err := lcu.LCU(lcu.Request{
+		Conn:     &connInfo,
+		Method:   "GET",
+		Endpoint: "/riotclient/region-locale",
+		Body:     nil,
+	})
+	check(err)
+	region := gjson.GetBytes(data, "region").String()
+
+	var summonerArray []clash.Summoner
+	for {
+		summonerArray, err = clash.ClashOpponent(&connInfo)
+		if err != nil {
+			prompt.Label = "No Clash opponent found"
+			choice, _, _ := prompt.Run()
+			if choice == 1 {
+				os.Exit(0)
+			}
+		} else {
+			break
+		}
+	}
+
+	cli.Cli(&summonerArray, region)
+
 	duration := time.Since(start)
 	fmt.Println(duration)
 }
