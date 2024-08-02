@@ -8,10 +8,33 @@ import (
 	"github.com/toqueteos/webbrowser"
 )
 
+
+
+
 func Cli(summoners *[]clash.Summoner, region string) {
-	var summoner_string strings.Builder
-	
 	var source_url string = ""
+	var summoner_string strings.Builder
+
+	ugg_map := map[string]string {
+		"BR":"BR1",
+		"EUNE":"EUN1",
+		"EUW":"EUW1",
+		"JP":"JP1",
+		"KR":"KR",
+		"LAN":"LA1",
+		"LAS":"LA2",
+		"NA":"NA1",
+		"OCE":"OC1",
+		"TR":"TR1",
+		"RU":"RU",
+		"PH":"PH2",
+		"SG":"SG2",
+		"TH":"TH2",
+		"TW":"TW2",
+		"VN":"VN2" ,
+	}
+
+
 	prompt := promptui.Select{
 		Label:    "Select Source",
 		HideHelp: true,
@@ -44,7 +67,7 @@ func Cli(summoners *[]clash.Summoner, region string) {
 		//https://u.gg/multisearch?summoners=name-region%2Cname-region%2Cname-region&region={REGION FRÅN RIOT API SE DISCORD}
 		//Har enbart EUW nu då jag inte har kollat upp hur man ska på bästa sätt lägga till siffra med riot api värdet e.g(EUW1, PH2)
 	case "U.GG":
-		source_url = fmt.Sprint("https://u.gg/multisearch?summoners=", summoner_string.String(), "&region=euw1",)
+		source_url = fmt.Sprint("https://u.gg/multisearch?summoners=", summoner_string.String(), "&region=", ugg_map[region])
 
 		//https://www.op.gg/multisearch/{REGION}?summoners=name#region%2Cname#region%2Cname#region
 	case "OP.GG":
