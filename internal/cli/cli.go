@@ -2,10 +2,11 @@ package cli
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/LuMa2003/clash-scouter-app/internal/clash"
 	"github.com/manifoldco/promptui"
 	"github.com/toqueteos/webbrowser"
-	"strings"
 )
 
 func Cli(summoners *[]clash.Summoner, region string) {
@@ -13,22 +14,22 @@ func Cli(summoners *[]clash.Summoner, region string) {
 	var summonerString strings.Builder
 
 	uggMap := map[string]string{
-		"BR":   "BR1",
-		"EUNE": "EUN1",
-		"EUW":  "EUW1",
-		"JP":   "JP1",
-		"KR":   "KR",
-		"LAN":  "LA1",
-		"LAS":  "LA2",
-		"NA":   "NA1",
-		"OCE":  "OC1",
-		"TR":   "TR1",
-		"RU":   "RU",
-		"PH":   "PH2",
-		"SG":   "SG2",
-		"TH":   "TH2",
-		"TW":   "TW2",
-		"VN":   "VN2",
+		"BR":   "br1",
+		"EUNE": "eun1",
+		"EUW":  "euw1",
+		"JP":   "jp1",
+		"KR":   "kr",
+		"LAN":  "la1",
+		"LAS":  "la2",
+		"NA":   "na1",
+		"OCE":  "oc1",
+		"TR":   "tr1",
+		"RU":   "ru",
+		"PH":   "ph2",
+		"SG":   "sg2",
+		"TH":   "th2",
+		"TW":   "tw2",
+		"VN":   "vn2",
 	}
 
 	prompt := promptui.Select{
@@ -47,16 +48,19 @@ func Cli(summoners *[]clash.Summoner, region string) {
 	if result == "OP.GG" {
 		for i, summoner := range *summoners {
 			if i == 0 {
-				summonerString.WriteString(fmt.Sprint(summoner.Name, "-", summoner.Tag))
+				summonerString.WriteString(fmt.Sprint(summoner.Name, "%23", summoner.Tag))
+			} else {
+				summonerString.WriteString(fmt.Sprint("%2C", summoner.Name, "%23", summoner.Tag))
 			}
-			summonerString.WriteString(fmt.Sprint("%2C", summoner.Name, "%23", summoner.Tag))
 		}
-	}
+	} else{
 	for i, summoner := range *summoners {
 		if i == 0 {
 			summonerString.WriteString(fmt.Sprint(summoner.Name, "-", summoner.Tag))
+		} else {
+			summonerString.WriteString(fmt.Sprint("%2C", summoner.Name, "-", summoner.Tag))
 		}
-		summonerString.WriteString(fmt.Sprint("%2C", summoner.Name, "-", summoner.Tag))
+	}
 	}
 	switch result {
 	//https://u.gg/multisearch?summoners=name-region%2Cname-region%2Cname-region&region={REGION FRÅN RIOT API SE DISCORD}
@@ -67,12 +71,14 @@ func Cli(summoners *[]clash.Summoner, region string) {
 		//https://www.op.gg/multisearch/{REGION}?summoners=name#region%2Cname#region%2Cname#region
 	case "OP.GG":
 		sourceUrl = fmt.Sprintf("https://www.op.gg/multisearch/%v?summoners=%v", region, summonerString.String())
-
+	
 		//HAR POROFESSOR
 		//https://porofessor.gg/pregame/{REGION}name-region%2Cname-region%2Cname-region
 	case "LEAGUEOFGRAPHS.COM":
 		sourceUrl = fmt.Sprintf("https://porofessor.gg/pregame/%v/%v", strings.ToLower(region), summonerString.String())
+
 	}
+
 	webbrowser.Open(sourceUrl)
 
 }
